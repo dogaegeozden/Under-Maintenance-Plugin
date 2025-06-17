@@ -1,6 +1,6 @@
 === Under Maintenance Plugin ===
 
-A simple WordPress plugin that displays an "Under Maintenance" message for non-logged-in users. Useful for development and maintenance periods.
+A simple WordPress plugin that displays an "Under Maintenance" message for non-admin users/visitors. Useful for development and maintenance periods.
 
 == Installation ==
 
@@ -13,7 +13,7 @@ A simple WordPress plugin that displays an "Under Maintenance" message for non-l
 - Checks if the user is not an admin.
 - Displays a clean maintenance message.
 
-== Usage ==
+== Usage
 
 - Activate plugin from Plugins menu.
 - Log out and visit the site to see the maintenance message.

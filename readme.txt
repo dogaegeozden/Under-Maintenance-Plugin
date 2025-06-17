@@ -6,6 +6,7 @@ A simple WordPress plugin that displays an "Under Maintenance" message for non-a
 
 1. Upload the under-maintenance.zip via WordPress admin.
 2. Activate the plugin through the Plugins menu.
+3. Enable under maintenance from Under Mainteannce menu.
 
 == How It Works ==
 
@@ -16,4 +17,5 @@ A simple WordPress plugin that displays an "Under Maintenance" message for non-a
 == Usage
 
 - Activate plugin from Plugins menu.
+- Enable under maintenance
 - Log out and visit the site to see the maintenance message.

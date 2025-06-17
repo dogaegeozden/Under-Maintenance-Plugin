@@ -21,7 +21,17 @@ function under_maintenance_input_field($name, $value, $type = 'text', $checked =
     if ($type === 'checkbox') {
         echo '<input type="checkbox" name="under_maintenance_settings[' . esc_attr($name) . ']" value="1" ' 
             . ($checked ? 'checked' : '') . ' />';
+    } else {
+        echo '<input type="' . esc_attr($type) . '" name="under_maintenance_settings[' . esc_attr($name) . ']" value="'
+            . esc_attr($value) . '" class="regular-text" />';
     }
+}
+
+function under_maintenance_textarea_field($name, $value, $rows = 5) {
+    echo '<textarea name="under_maintenance_settings['
+        . esc_attr($name) . ']" class="regular-text" rows="'
+        . intval($rows) . '">'
+        . esc_textarea($value) . '</textarea>';
 }
 
 
@@ -32,19 +42,22 @@ function under_maintenance_input_field($name, $value, $type = 'text', $checked =
 
 ##############################
 
-function um_maintenance_mode() {
+function take_it_under_maintenance() {
     $options = get_option('under_maintenance_settings');
     if (empty($options['enable_under_maintenance'])) return;
 
+    $title = isset($options['under_maintenance_page_title']) ? esc_html($options['under_maintenance_page_title']) : '';
+    $message = isset($options['under_maintenance_page_message']) ? esc_html($options['under_maintenance_page_message']) : '';
+
     if (!current_user_can('edit_themes') || !current_user_can('manage_options')) {
         wp_die(
-            '<h1 style="text-align:center;margin-top:50px;font-size:30px;">Under Maintenance</h1>
-            <p style="text-align:center;">We\'re currently performing scheduled maintenance. Please check back later.</p>',
+            "<h1 style='text-align:center;margin-top:50px;font-size:30px;'>{$title}</h1>
+            <p style='text-align:center;'>{$message}</p>",
             'Maintenance Mode'
         );
     }
 }
-add_action('template_redirect', 'um_maintenance_mode');
+add_action('template_redirect', 'take_it_under_maintenance');
 
 
 
@@ -111,6 +124,20 @@ function under_maintenance_register_settings() {
         'under-maintenance-settings',
         'under_maintenance_main_section'
     );
+    add_settings_field(
+        'under_maintenance_page_title',
+        'Title:',
+        'under_maintenance_page_title_callback',
+        'under-maintenance-settings',
+        'under_maintenance_main_section'
+    );
+    add_settings_field(
+        'under_maintenance_page_message',
+        'Message:',
+        'under_maintenance_page_message_callback',
+        'under-maintenance-settings',
+        'under_maintenance_main_section'
+    );
 }
 add_action('admin_init', 'under_maintenance_register_settings');
 
@@ -126,6 +153,15 @@ function under_maintenance_sanitize_callback($input) {
     $sanitized = [];
     // Checkbox fields - boolean (true/false)
     $sanitized['enable_under_maintenance'] = !empty($input['enable_under_maintenance']);
+    // Text fields - sanitize_text_field
+    $sanitized['under_maintenance_page_title'] =
+    isset($input['under_maintenance_page_title'])
+        ? sanitize_text_field($input['under_maintenance_page_title'])
+        : '';
+    $sanitized['under_maintenance_page_message'] =
+        isset($input['under_maintenance_page_message'])
+            ? sanitize_textarea_field($input['under_maintenance_page_message'])
+            : '';
     return $sanitized;
 }
 
@@ -141,4 +177,20 @@ function under_maintenance_enable_callback() {
     $options = get_option('under_maintenance_settings');
     $checked = !empty($options['enable_under_maintenance']);
     under_maintenance_input_field('enable_under_maintenance', '1', 'checkbox', $checked);
+}
+
+function under_maintenance_page_title_callback() {
+    $options = get_option('under_maintenance_settings');
+    under_maintenance_input_field(
+        $name='under_maintenance_page_title',
+        $value=$options['under_maintenance_page_title'] ?? 'Under Maintenance'
+    );
+}
+
+function under_maintenance_page_message_callback() {
+    $options = get_option('under_maintenance_settings');
+    under_maintenance_textarea_field(
+        $name='under_maintenance_page_message',
+        $value=$options['under_maintenance_page_message'] ?? 'We\'re currently performing scheduled maintenance. Please check back later.'
+    );
 }

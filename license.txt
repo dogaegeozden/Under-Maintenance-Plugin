@@ -1,0 +1,17 @@
+Under Maintenance WordPress Plugin
+(c) 2025 Doga Ege Ozden
+
+This plugin is comprised of two parts:
+
+1. PHP code is licensed under the GNU General Public License v2.0 or later.
+See: https://www.gnu.org/licenses/gpl-2.0.html
+
+2. All other files including but not limited to:
+- Images
+- CSS files
+- JavaScript files
+- Documentation
+are licensed under the Envato Elements License Agreement.
+
+Redistribution of this plugin's PHP code must follow the GPL license.
+Use and distribution of assets are subject to the Envato license you obtained upon purchase.
